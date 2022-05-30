@@ -1,5 +1,4 @@
 export interface PostInterface{ //structure for making and sending post objects without having to include post ID
-    title: string,
     content: string,
     category: string,
     author: string,
@@ -7,10 +6,8 @@ export interface PostInterface{ //structure for making and sending post objects 
 }
 
 export interface DatabasePostInterface { //structure for getting from database
-    title: string,
     content: string,
-    category: string,
-    author: string,
+    authorID: string,
     date: string,
     _id: string
   }

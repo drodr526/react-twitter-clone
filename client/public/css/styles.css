@@ -1,4 +1,32 @@
-.login{
+body {
+    background-color: #14171A;
+    color: #F5F8FA;
+    padding: 0 500px;
+}
+
+.login {
     text-align: center;
     padding: 150px 20px;
+}
+
+.quack{
+    border: 0.5px solid #657786;
+    padding: 10px;
+}
+
+.submit{
+    border: 0.5px solid #657786;
+    padding: 10px;
+}
+
+@media only screen and (max-width: 1350px) {
+    body {
+        padding: 0 250px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    body {
+        padding: 0 10px;
+    }
 }

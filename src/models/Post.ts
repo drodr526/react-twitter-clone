@@ -1,11 +1,9 @@
 import mongoose from "mongoose";
 
 const postSchema= new mongoose.Schema({
-    title: String,
     content: String,
-    category: String,
-    author: String,
-    date: String,
+    authorID: String,
+    date: Date,
 })
 
 export default mongoose.model("Post", postSchema)

@@ -63,10 +63,10 @@ passport.deserializeUser((id, cb) => {
 
 // Routes
 app.post('/api/register', async (req, res) => {
-    const { username, password } = req?.body; //? means if there is no request, request == undefined. 
+    const { name, email, username, password } = req?.body; //? means if there is no request, request == undefined. 
 
     //if there is no username or password, or entered values are not strings, return Improper Values
-    if (!username || !password || typeof username !== "string" || typeof password !== "string") {
+    if (!username || !password || !email || typeof username !== "string" || typeof password !== "string") {
         res.send("Improper values");
         return;
     }
@@ -75,6 +75,8 @@ app.post('/api/register', async (req, res) => {
         if (doc) res.send("User already exists")
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
+            name: name,
+            email: email,
             username: username,
             password: hashedPassword
         })
@@ -101,42 +103,38 @@ app.get("/api/session", (req, res) => {
 })
 
 app.route("/api/posts/")
-.get((req,res)=>{
-    res.send("All posts")
-})
-.post((req,res)=>{
-    const newPost = new Post({
-        title:req.body.title,
-        content:req.body.content,
-        category:req.body.category,
-        author:req.body.author,
-        date:req.body.date
+    .get((req, res) => {
+        Post.find({}, (err: Error, posts: any) => {
+            if (err) console.log(err)
+            else res.send(posts)
+        })
+        .populate("user")
     })
+    .post((req, res) => {
+        const newPost = new Post({
+            content: req.body.content,
+            //@ts-ignore
+            authorID: req.user._id,
+            date: req.body.date
+        })
 
-    newPost.save()
-    .then(()=>res.send("Saved successfully"))
-})
+        newPost.save()
+            .then(() => res.send("Saved successfully"))
+    })
 
 app.route("/api/posts/:id")
-.get((req,res)=>{
-    Post.findById(req.params.id, (err : Error, doc : PostInterface)=>{
-        if(err) res.send(err)
-        else res.send(doc)
+    .get((req, res) => {
+        Post.findById(req.params.id, (err: Error, doc: PostInterface) => {
+            if (err) res.send(err)
+            else res.send(doc)
+        })
     })
-})
-.put((req,res)=>{
-
-    Post.findByIdAndUpdate(req.params.id, {title:req.body.title, content:req.body.content}, (err : Error, doc : PostInterface)=>{
-        if(err) res.send(err);
-        else res.send("Updated successfully")
+    .delete((req, res) => {
+        Post.findByIdAndDelete(req.params.id, (err: Error, doc: PostInterface) => {
+            if (err) res.send(err);
+            else res.send("Deleted successfully")
+        })
     })
-})
-.delete((req,res)=>{
-    Post.findByIdAndDelete(req.params.id, (err : Error, doc : PostInterface)=>{
-        if(err) res.send(err);
-        else res.send("Deleted successfully")
-    })
-})
 
 app.listen(4000, () => {
     console.log("Server started on port 4000");

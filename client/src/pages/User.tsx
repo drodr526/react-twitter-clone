@@ -2,9 +2,8 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar';
 import Quack from '../components/Quack';
-import Submit from '../components/Submit';
 
-export default function Home() {
+export default function User() {
   const [quacks, setQuacks] = useState([]);
 
   useEffect(()=>{
@@ -15,9 +14,8 @@ export default function Home() {
   return (
     <div>
       <Navbar/>
-      <Submit/>
       {quacks.map((quack : any)=>{
-          return <Quack authorName={quack.authorName} authorUsername={quack.authorUsername} content={quack.content} date={quack.date}/>
+          return <Quack author={quack.author} content={quack.content}/>
         })}
     </div>
   )
