@@ -14,7 +14,9 @@ const userSchema= new mongoose.Schema({
     isAdmin:{
         type: Boolean,
         default: false
-    }
+    },
+    following: Array,
+    followers: Array
 })
 
 export default mongoose.model("User", userSchema)

@@ -25,7 +25,7 @@ export default function Submit() {
                 <input type="text" className="form-control bg-dark text-white" value={quackText} onChange={(event) => setQuackText(event.target.value)} />
                 <label>New Quack</label>
             </div>
-            <button className='btn btn-warning' onClick={handleSubmit}>Submit</button>
+            <button className='btn btn-warning' onClick={handleSubmit} >Submit</button>
         </div>
     )
 }

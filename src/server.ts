@@ -102,20 +102,37 @@ app.get("/api/session", (req, res) => {
     res.send(req.user);
 })
 
+app.route("/api/users/:username")
+.get((req,res)=>{
+    User.find({username:req.params.username})
+    //@ts-ignore
+    .exec((err : Error, doc : any)=>{
+        res.send(doc);
+    })
+})
+
 app.route("/api/posts/")
     .get((req, res) => {
-        Post.find({}, (err: Error, posts: any) => {
-            if (err) console.log(err)
-            else res.send(posts)
-        })
-        .populate("user")
+        Post.find({})
+            .sort({ date: -1 })
+            .populate({
+                path: "author",
+                select: "name username"
+            })
+            //@ts-ignore
+            .exec((err: Error, posts: any) => {
+                if (err) console.log(err)
+                else res.send(posts)
+            })
+
     })
     .post((req, res) => {
+
         const newPost = new Post({
             content: req.body.content,
             //@ts-ignore
-            authorID: req.user._id,
-            date: req.body.date
+            author: req.user._id,
+            date: new Date()
         })
 
         newPost.save()
