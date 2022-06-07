@@ -1,6 +1,5 @@
 export interface PostInterface{ //structure for making and sending post objects without having to include post ID
     content: string,
-    category: string,
     author: string,
     date: string,
 }

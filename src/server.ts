@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import express from "express";
+import express, { response } from "express";
 import cors from "cors";
 import passport from "passport";
 import passportLocal from "passport-local";
@@ -96,6 +96,7 @@ app.post('/api/logout', (req, res, next) => {
         if (err) { return next(err); }
         res.send("Logged out");
     });
+
 });
 
 app.get("/api/session", (req, res) => {
@@ -103,13 +104,105 @@ app.get("/api/session", (req, res) => {
 })
 
 app.route("/api/users/:username")
-.get((req,res)=>{
-    User.find({username:req.params.username})
-    //@ts-ignore
-    .exec((err : Error, doc : any)=>{
-        res.send(doc);
+    .get((req, res) => {
+        User.findOne({ username: req.params.username })
+            .select("username name following followers")
+            //@ts-ignore
+            .exec((err: Error, doc: any) => {
+                res.send(doc)
+            })
     })
-})
+
+app.route("/api/users/:username/posts")
+    .get((req, res) => {
+        User.find({ username: req.params.username })
+            .select("username name")
+            //@ts-ignore
+            .exec((err: Error, user: any) => {
+                Post.find({ author: user })
+                    .sort({ date: -1 })
+                    .populate({
+                        path: "author",
+                        select: "name username"
+                    })
+                    //@ts-ignore
+                    .exec((err: Error, postDocs: any) => {
+                        res.send(postDocs)
+                    })
+
+            })
+    })
+
+app.route("/api/follow")
+    .post((req, res) => {
+        User.findOneAndUpdate(req.user, { $push: { following: req.body.followUser._id } })
+            //@ts-ignore
+            .exec((err: Error, sessionUser: any) => {
+                User.findOneAndUpdate({ username: req.body.followUser.username }, { $push: { followers: req.user } })
+                    //@ts-ignore
+                    .exec((err: Error, userBeingFollowed: any) => {
+                        res.send("Following...")
+                    })
+            })
+    })
+
+app.route("/api/unfollow")
+    .post((req: any, res) => {
+        User.findOneAndUpdate({ username: req.user.username }, { $pull: { following: req.body.unfollowUser._id } })
+            //@ts-ignore
+            .exec((err: Error, sessionUser: any) => {
+                User.findOneAndUpdate({ username: req.body.unfollowUser.username }, { $pull: { followers: req.user._id } })
+                    //@ts-ignore
+                    .exec((err: Error, userBeingFollowed: any) => {
+                        res.send("Unfollowing...")
+                    })
+            })
+    })
+
+app.route("/api/like")
+    .post((req: any, res: any) => {
+
+        const likePost = new mongoose.Types.ObjectId(req.body.likePost)
+        User.findOneAndUpdate({ username: req.user.username }, { $push: { likes: likePost } })
+        //@ts-ignore
+        .exec((err: Error, sessionUser: any) => {
+            Post.findByIdAndUpdate(likePost, {$push:{likedBy: req.user}})
+            //@ts-ignore
+            .exec((err:Error, post: any)=>{
+                res.send("Liked")
+            })
+        })
+    })
+
+app.route("/api/unlike")
+    .post((req: any, res: any) => {
+        const unlikePost = new mongoose.Types.ObjectId(req.body.unlikePost)
+        User.findOneAndUpdate({ username: req.user.username }, { $pull: { likes: unlikePost } })
+        //@ts-ignore
+        .exec((err: Error, sessionUser: any) => {
+            Post.findByIdAndUpdate(unlikePost, {$pull:{likedBy: req.user._id}})
+            //@ts-ignore
+            .exec((err:Error, post: any)=>{
+                res.send("Unliked")
+            })
+        })
+    })
+
+
+app.route("/api/feed")
+    .get((req: any, res: any) => {
+        req.user.following.push(req.user)
+        Post.find({ "author": { $in: req.user.following } })
+            .sort({ date: -1 })
+            .populate({
+                path: "author",
+                select: "name username"
+            })
+            //@ts-ignore
+            .exec((err: Error, posts: any) => {
+                res.send(posts)
+            })
+    })
 
 app.route("/api/posts/")
     .get((req, res) => {

@@ -1,6 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid, regular, brands } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
+import LikeButton from './LikeButton'
 
 export default function Quack(props: any) {
 
@@ -11,29 +12,35 @@ export default function Quack(props: any) {
 
   let simpleDate = ""
 
-  const isToday = (quackDate : any) => {
+  const isToday = (quackDate: any) => {
     const today = new Date()
     return quackDate.getDate() == today.getDate() &&
       quackDate.getMonth() == today.getMonth() &&
       quackDate.getFullYear() == today.getFullYear()
   }
 
-  if(!isToday(quackDate))
-    simpleDate = quackDate.getMonth() + "/" + quackDate.getDate()
-  else if(timeDifference > 3600000)
+  if (!isToday(quackDate))
+    simpleDate = quackDate.getMonth() + 1 + "/" + quackDate.getDate()
+  else if (timeDifference > 3600000)
     simpleDate = Math.floor(timeDifference / 3600000) + 'h'
-  else if (timeDifference > 60000) 
+  else if (timeDifference > 60000)
     simpleDate = Math.floor(timeDifference / 60000) + 'm'
   else if (timeDifference > 1000)
-    simpleDate = Math.floor(timeDifference / 1000) + 's' 
-    
-  // console.log(typeof(props.date)) says props.date is a string, not a date object
-  //need to find
+    simpleDate = Math.floor(timeDifference / 1000) + 's'
+
   return (
     <div className="quack">
-      <h4>{props.authorName}</h4> <p>@{props.authorUsername}</p>
+      <div className='quackHeader'><h4><a className="name" href={"/user/" + props.authorUsername}>{props.authorName}</a></h4>
+        <p><a className="atUsername" href={"/user/" + props.authorUsername}>@{props.authorUsername}</a></p>
+        <p className='quackDate'><FontAwesomeIcon icon={regular("clock")} /> {simpleDate}</p></div>
+
       <p>{props.content}</p>
-      <p><FontAwesomeIcon icon={regular("clock")} /> {simpleDate}</p>
+
+      <div className='quackFooter'>
+        <div className='quackButtons'><FontAwesomeIcon icon={solid("reply")} /></div>
+        <div className='quackButtons'><FontAwesomeIcon icon={solid("retweet")} /></div>
+        <LikeButton session={props.session} id={props.id}/>
+      </div>
     </div>
   )
 }

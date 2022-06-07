@@ -3,6 +3,7 @@ export interface UserInterface{ //structure for making and sending user objects 
     password: string, 
     name: string,
     isAdmin: false
+    likes:[]
 }
 
 export interface DatabaseUserInterface { //structure for getting from database
@@ -10,5 +11,6 @@ export interface DatabaseUserInterface { //structure for getting from database
     password: string;
     name: string,
     isAdmin: boolean;
+    likes:[]
     _id: string;
   }

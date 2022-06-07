@@ -15,8 +15,9 @@ const userSchema= new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    following: Array,
-    followers: Array
+    following: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    followers: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    likes:  [{type: mongoose.Schema.Types.ObjectId, ref: "Post"}]
 })
 
 export default mongoose.model("User", userSchema)

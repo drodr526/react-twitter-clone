@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
 
-    const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     const [warning, setWarning] = useState("")
@@ -13,12 +13,12 @@ export default function Login() {
 
     const handleSubmit = () => {
         axios.post("/api/login",
-            { username: email, password: password },
+            { username: username, password: password },
             { withCredentials: true })
             .then((res) => {
                 console.log(res.data)
                 if (res.data == "Successfully authenticated") {
-                    navigate("/")
+                    navigate("/feed")
                 }
             })
     }
@@ -32,7 +32,7 @@ export default function Login() {
                         <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
                         <div className="form-floating">
-                            <input type="text" className="form-control bg-dark text-white" value={email} onChange={(event) => setEmail(event.target.value)} />
+                            <input type="text" className="form-control bg-dark text-white" value={username} onChange={(event) => setUsername(event.target.value)} />
                             <label>Username</label>
                         </div>
                         <div className="form-floating">
@@ -40,6 +40,7 @@ export default function Login() {
                             <label>Password</label>
                         </div>
                         <button className="w-100 btn btn-lg btn-primary" type="button" onClick={handleSubmit}>Sign in</button>
+                        <a href="/register">Register here</a>
                         <p className="mt-5 mb-3 text-muted">&copy; 2022</p>
                     </form>
                 </div>
