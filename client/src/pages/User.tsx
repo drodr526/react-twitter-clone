@@ -6,6 +6,7 @@ import Quack from '../components/Quack';
 import Submit from '../components/Submit';
 import FollowButton from '../components/FollowButton';
 import UserInterface from '../interfaces/UserInterface';
+import UserList from '../components/UserList';
 
 export default function User() {
   const [showFollowButton, setShowFollowButton] = useState(false)
@@ -14,6 +15,9 @@ export default function User() {
   const [session, setSession] = useState<UserInterface>();
   const [viewedUser, setViewedUser] = useState<UserInterface>();
   const [quacks, setQuacks] = useState([]);
+
+  const [showFollowersList, setShowFollowersList] = useState(false)
+  const [showFollowingList, setShowFollowingList] = useState(false)
 
   const { username } = useParams();
 
@@ -52,28 +56,33 @@ export default function User() {
 
   return (
     <div>
+      {viewedUser && <UserList show={showFollowingList} setShow={setShowFollowingList} title="Following" list={viewedUser.following} />}
+      {viewedUser && <UserList show={showFollowersList} setShow={setShowFollowersList} title="Followers" list={viewedUser.followers} />}
       <Navbar session={session} />
       <div className='user-header'>
-        {showFollowButton && <FollowButton 
-        viewedUser={viewedUser} 
-        session={session} 
-        isFollowing={isFollowing} 
-        setIsFollowing={setIsFollowing} 
-        followerCount={followerCount} 
-        setFollowerCount={setFollowerCount} />}
+        {showFollowButton && <FollowButton
+          viewedUser={viewedUser}
+          session={session}
+          isFollowing={isFollowing}
+          setIsFollowing={setIsFollowing}
+          followerCount={followerCount}
+          setFollowerCount={setFollowerCount} />}
         <h2>{viewedUser ? viewedUser.username : "No user found."}</h2>
       </div>
-      {viewedUser && <div><h4 className='followingCount'>{viewedUser.following.length} Following</h4> <h4 className='followerCount'>{followerCount} Followers</h4></div>}
+      {viewedUser && 
+      <div><h4 className='followingCount' onClick={()=>setShowFollowingList(true)}>{viewedUser.following.length} Following</h4> 
+      <h4 className='followerCount' onClick={()=>setShowFollowersList(true)}>{followerCount} Followers</h4></div>}
       {session && <Submit />}
       {quacks.map((quack: any) => {
-        return <Quack 
-        id={quack._id} 
-        key={quack._id}
-        authorName={quack.author.name} 
-        authorUsername={quack.author.username} 
-        content={quack.content} 
-        date={quack.date} 
-        session={session}
+        return <Quack
+          id={quack._id}
+          key={quack._id}
+          authorName={quack.author.name}
+          authorUsername={quack.author.username}
+          content={quack.content}
+          likedBy={quack.likedBy}
+          date={quack.date}
+          session={session}
         />
       })}
     </div>

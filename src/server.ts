@@ -94,6 +94,8 @@ app.post('/api/logout', (req, res, next) => {
     //@ts-ignore
     req.logout((err) => {
         if (err) { return next(err); }
+        //@ts-ignore
+        req.session.destroy()
         res.send("Logged out");
     });
 
@@ -107,18 +109,25 @@ app.route("/api/users/:username")
     .get((req, res) => {
         User.findOne({ username: req.params.username })
             .select("username name following followers")
-            //@ts-ignore
-            .exec((err: Error, doc: any) => {
+            .exec((err: any, doc: any) => {
                 res.send(doc)
             })
+    })
+
+app.route("/api/user-list")
+    .post((req,res)=>{
+        User.find({"_id":{$in:req.body.list}})
+        .select("username name")
+        .exec((err:any, users :any)=>{
+            res.send(users)
+        })
     })
 
 app.route("/api/users/:username/posts")
     .get((req, res) => {
         User.find({ username: req.params.username })
             .select("username name")
-            //@ts-ignore
-            .exec((err: Error, user: any) => {
+            .exec((err: any, user: any) => {
                 Post.find({ author: user })
                     .sort({ date: -1 })
                     .populate({
@@ -134,8 +143,8 @@ app.route("/api/users/:username/posts")
     })
 
 app.route("/api/follow")
-    .post((req, res) => {
-        User.findOneAndUpdate(req.user, { $push: { following: req.body.followUser._id } })
+    .post((req : any, res) => {
+        User.findOneAndUpdate({username: req.user.username}, { $push: { following: req.body.followUser._id } })
             //@ts-ignore
             .exec((err: Error, sessionUser: any) => {
                 User.findOneAndUpdate({ username: req.body.followUser.username }, { $push: { followers: req.user } })
@@ -164,28 +173,28 @@ app.route("/api/like")
 
         const likePost = new mongoose.Types.ObjectId(req.body.likePost)
         User.findOneAndUpdate({ username: req.user.username }, { $push: { likes: likePost } })
-        //@ts-ignore
-        .exec((err: Error, sessionUser: any) => {
-            Post.findByIdAndUpdate(likePost, {$push:{likedBy: req.user}})
             //@ts-ignore
-            .exec((err:Error, post: any)=>{
-                res.send("Liked")
+            .exec((err: Error, sessionUser: any) => {
+                Post.findByIdAndUpdate(likePost, { $push: { likedBy: req.user } })
+                    //@ts-ignore
+                    .exec((err: Error, post: any) => {
+                        res.send("Liked")
+                    })
             })
-        })
     })
 
 app.route("/api/unlike")
     .post((req: any, res: any) => {
         const unlikePost = new mongoose.Types.ObjectId(req.body.unlikePost)
         User.findOneAndUpdate({ username: req.user.username }, { $pull: { likes: unlikePost } })
-        //@ts-ignore
-        .exec((err: Error, sessionUser: any) => {
-            Post.findByIdAndUpdate(unlikePost, {$pull:{likedBy: req.user._id}})
             //@ts-ignore
-            .exec((err:Error, post: any)=>{
-                res.send("Unliked")
+            .exec((err: Error, sessionUser: any) => {
+                Post.findByIdAndUpdate(unlikePost, { $pull: { likedBy: req.user._id } })
+                    //@ts-ignore
+                    .exec((err: Error, post: any) => {
+                        res.send("Unliked")
+                    })
             })
-        })
     })
 
 

@@ -41,6 +41,7 @@ export default function Home() {
         authorName={quack.author.name} 
         authorUsername={quack.author.username} 
         content={quack.content} 
+        likedBy={quack.likedBy}
         date={quack.date} 
         session={session}
         />

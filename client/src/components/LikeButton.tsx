@@ -6,6 +6,7 @@ import { solid, regular, brands } from '@fortawesome/fontawesome-svg-core/import
 export default function LikeButton(props : any) {
 
     const [isLiked, setIsLiked] = useState(false)
+    const [likeCount, setLikeCount] = useState(0)
     const [waitingApiResponse, setWaitingApiResponse] = useState(false);
 
     useEffect(()=>{
@@ -13,6 +14,9 @@ export default function LikeButton(props : any) {
             if(props.session.likes.includes(props.id)){
                 setIsLiked(true)
             }
+        }
+        if(props.likedBy){
+            setLikeCount(props.likedBy.length)
         }
     }, [])
 
@@ -26,6 +30,7 @@ export default function LikeButton(props : any) {
                     { withCredentials: true })
                     .then((res) => {
                         setIsLiked(false)
+                        setLikeCount(likeCount - 1)
                         setWaitingApiResponse(false)
                     })
             }
@@ -37,6 +42,7 @@ export default function LikeButton(props : any) {
                     { withCredentials: true })
                     .then((res) => {
                         setIsLiked(true)
+                        setLikeCount(likeCount + 1)
                         setWaitingApiResponse(false)
                     })
             }
@@ -47,7 +53,8 @@ export default function LikeButton(props : any) {
     <div className='quackButtons'>
         {isLiked ?  
         <FontAwesomeIcon style={{color:"red"}} icon={solid("heart")} onClick={handleClick}/> 
-        : <FontAwesomeIcon icon={regular("heart")} onClick={handleClick}/>}
+        : <FontAwesomeIcon style={{color:"grey"}}icon={regular("heart")} onClick={handleClick}/>}
+        <p style={isLiked ? {color:"red"} : {color:"grey"}}> {likeCount > 0 && likeCount}</p>
     </div>
   )
 }

@@ -37,9 +37,9 @@ export default function Quack(props: any) {
       <p>{props.content}</p>
 
       <div className='quackFooter'>
-        <div className='quackButtons'><FontAwesomeIcon icon={solid("reply")} /></div>
-        <div className='quackButtons'><FontAwesomeIcon icon={solid("retweet")} /></div>
-        <LikeButton session={props.session} id={props.id}/>
+        <div className='quackButtons'><FontAwesomeIcon style={{color:"grey"}} icon={solid("reply")} /></div>
+        <div className='quackButtons'><FontAwesomeIcon style={{color:"grey"}} icon={solid("retweet")} /></div>
+        <LikeButton session={props.session} id={props.id} likedBy={props.likedBy}/>
       </div>
     </div>
   )

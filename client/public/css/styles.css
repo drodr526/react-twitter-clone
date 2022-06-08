@@ -35,6 +35,11 @@ body {
 .quackButtons{
     margin: 0 20% 0 0;
     font-size: 1.3em;
+    cursor: pointer;
+}
+
+.quackButtons p{
+    display: inline;
 }
 
 .quackDate{
@@ -108,12 +113,22 @@ body {
 }
 
 .followingCount{
+    cursor: pointer;
     display: inline-block;
     margin: 0 5%;
 }
 
+.followingCount:hover{
+    text-decoration: underline;
+}
+
 .followerCount{
+    cursor: pointer;
     display: inline-block;
+}
+
+.followerCount:hover{
+    text-decoration: underline;
 }
 
 .user-header {
@@ -129,6 +144,17 @@ body {
     color: white;
     text-decoration: underline;
 }
+
+.userDiv{
+    cursor: pointer;
+    padding: 20px;
+}
+
+.userDiv:hover{
+    cursor: pointer;
+    background-color: #ffffff13;
+}
+
 
 
 
