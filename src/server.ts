@@ -115,12 +115,12 @@ app.route("/api/users/:username")
     })
 
 app.route("/api/user-list")
-    .post((req,res)=>{
-        User.find({"_id":{$in:req.body.list}})
-        .select("username name")
-        .exec((err:any, users :any)=>{
-            res.send(users)
-        })
+    .post((req, res) => {
+        User.find({ "_id": { $in: req.body.list } })
+            .select("username name")
+            .exec((err: any, users: any) => {
+                res.send(users)
+            })
     })
 
 app.route("/api/users/:username/posts")
@@ -143,8 +143,8 @@ app.route("/api/users/:username/posts")
     })
 
 app.route("/api/follow")
-    .post((req : any, res) => {
-        User.findOneAndUpdate({username: req.user.username}, { $push: { following: req.body.followUser._id } })
+    .post((req: any, res) => {
+        User.findOneAndUpdate({ username: req.user.username }, { $push: { following: req.body.followUser._id } })
             //@ts-ignore
             .exec((err: Error, sessionUser: any) => {
                 User.findOneAndUpdate({ username: req.body.followUser.username }, { $push: { followers: req.user } })
@@ -197,11 +197,29 @@ app.route("/api/unlike")
             })
     })
 
+app.route("/api/reply")
+    .post((req: any, res: any) => {
+        const reply = new Post({
+            author: req.user._id,
+            content: req.body.content,
+            replyingTo: req.body.postID,
+            date: new Date()
+        })
+
+        reply.save((err: any, doc: any) => {
+            Post.findByIdAndUpdate(req.body.postID, { $push: { replies: doc._id } })
+                .exec((err: any, originalPost: any) => {
+                    res.send("Updated post")
+                })
+        })
+
+
+    })
 
 app.route("/api/feed")
     .get((req: any, res: any) => {
         req.user.following.push(req.user)
-        Post.find({ "author": { $in: req.user.following } })
+        Post.find({ "author": { $in: req.user.following }, "replyingTo":{$exists:false} })
             .sort({ date: -1 })
             .populate({
                 path: "author",
@@ -221,8 +239,7 @@ app.route("/api/posts/")
                 path: "author",
                 select: "name username"
             })
-            //@ts-ignore
-            .exec((err: Error, posts: any) => {
+            .exec((err: any, posts: any) => {
                 if (err) console.log(err)
                 else res.send(posts)
             })
@@ -243,10 +260,23 @@ app.route("/api/posts/")
 
 app.route("/api/posts/:id")
     .get((req, res) => {
-        Post.findById(req.params.id, (err: Error, doc: PostInterface) => {
-            if (err) res.send(err)
-            else res.send(doc)
-        })
+        Post.findById(req.params.id)
+            .populate({
+                path: "author",
+                select: "name username"
+            })
+            .populate({
+                path: "replies",
+                select: "content date likedBy",
+                populate:{
+                    path: "author",
+                    select:"name username date"
+                }
+            })
+            .exec((err: any, post: PostInterface) => {
+                if (err) res.send(err)
+                else res.send(post)
+            })
     })
     .delete((req, res) => {
         Post.findByIdAndDelete(req.params.id, (err: Error, doc: PostInterface) => {

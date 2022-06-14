@@ -16,6 +16,12 @@ export default function FollowButton(props: any) {
                         console.log(res.data)
                         props.setFollowerCount(props.followerCount - 1)
                         props.setIsFollowing(false)
+                        //removes user from the follower list client side
+                        for (let i = 0; i < props.viewedUser.followers.length; i++) {
+                            if (props.viewedUser.followers[i] == props.session._id) {
+                                props.viewedUser.followers.splice(i, 1);
+                            }
+                        }
                         setWaitingApiResponse(false)
                     })
             }
@@ -28,12 +34,11 @@ export default function FollowButton(props: any) {
                         console.log(res.data)
                         props.setFollowerCount(props.followerCount + 1)
                         props.setIsFollowing(true)
+                        props.viewedUser.followers.push(props.session._id)
                         setWaitingApiResponse(false)
                     })
             }
         }
-
-
     }
 
 

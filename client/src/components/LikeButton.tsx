@@ -2,11 +2,13 @@ import React, {useState, useEffect} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { solid, regular, brands } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
+import UserList from './UserList'
 
 export default function LikeButton(props : any) {
 
     const [isLiked, setIsLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(0)
+    const [showUsersWhoLiked, setShowUsersWhoLiked] = useState(false)
     const [waitingApiResponse, setWaitingApiResponse] = useState(false);
 
     useEffect(()=>{
@@ -20,7 +22,8 @@ export default function LikeButton(props : any) {
         }
     }, [])
 
-    const handleClick = () => {
+    const handleClick = (event : any) => {
+        event.stopPropagation() 
         if (!waitingApiResponse) {
             if (isLiked) {
                 console.log("Unliking")
@@ -49,12 +52,18 @@ export default function LikeButton(props : any) {
         }
     }
 
+    const handleClickLikeCount = (event : any) =>{
+        event.stopPropagation() 
+        setShowUsersWhoLiked(true)
+    }
+
   return (
     <div className='quackButtons'>
+        <UserList show={showUsersWhoLiked} setShow={setShowUsersWhoLiked} title="Users Who Liked"/>
         {isLiked ?  
         <FontAwesomeIcon style={{color:"red"}} icon={solid("heart")} onClick={handleClick}/> 
         : <FontAwesomeIcon style={{color:"grey"}}icon={regular("heart")} onClick={handleClick}/>}
-        <p style={isLiked ? {color:"red"} : {color:"grey"}}> {likeCount > 0 && likeCount}</p>
+        <a onClick={handleClickLikeCount} style={isLiked ? {color:"red"} : {color:"grey"}}> {likeCount > 0 && likeCount}</a>
     </div>
   )
 }

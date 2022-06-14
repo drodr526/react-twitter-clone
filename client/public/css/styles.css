@@ -24,12 +24,17 @@ body {
 
 .quack {
     border-top: 0.5px;
-    border-right: 0.5px;
-    border-left: 0.5px;
-    border-bottom: 0;
+    border-right: 1px;
+    border-left: 1px;
+    border-bottom: 0.5px;
     border-color: grey;
     border-style: solid;
     padding: 25px;
+}
+
+.quack:hover{
+    background-color: #ffffff08;
+    cursor: pointer;
 }
 
 .quackButtons{
@@ -57,9 +62,9 @@ body {
 
 .submitDiv {
     border-top: 0.5px;
-    border-right: 0.5px;
-    border-left: 0.5px;
-    border-bottom: 0;
+    border-right: 1px;
+    border-left: 1px;
+    border-bottom: 0.5px;
     border-color: grey;
     border-style: solid;
     padding: 25px;

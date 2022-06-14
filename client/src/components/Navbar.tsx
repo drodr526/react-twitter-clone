@@ -22,7 +22,7 @@ export default function Navbar(props: any) {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav ms-auto">
-            {props.session && <a className="nav-link active" aria-current="page" href="/feed">Feed</a>}
+            {props.session && <a className="nav-link" aria-current="page" href="/feed">Feed</a>}
 
             {props.session && <a className="nav-link" href="/">Explore</a>}
             {props.session ?

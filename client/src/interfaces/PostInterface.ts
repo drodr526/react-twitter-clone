@@ -1,7 +1,20 @@
 export default interface PostInterface{
     content: "",
-    authorID: "",
+    author: {
+        name: "",
+        username: ""
+    },
     date: "",
     _id: "",
     likedBy:[]
+    replies:[{
+        _id:"",
+        content:"",
+        author:{
+            name:"",
+            username:""
+        },
+        date:""
+        likedBy:[]
+    }]
 }

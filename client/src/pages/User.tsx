@@ -35,10 +35,10 @@ export default function User() {
         setViewedUser(res.data)
         console.log("Viewed user: ")
         console.log(res.data)
-      })
 
-    axios.get("/api/users/" + username + "/posts")
-      .then((res) => setQuacks(res.data))
+        axios.get("/api/users/" + username + "/posts")
+          .then((res) => setQuacks(res.data))
+      })
   }, [])
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function User() {
       }
 
       //@ts-ignore
-      if (session["following"].includes(viewedUser["_id"])) {
+      if (session.following.includes(viewedUser._id)) {
         setIsFollowing(true)
       }
     }
@@ -62,17 +62,18 @@ export default function User() {
       <div className='user-header'>
         {showFollowButton && <FollowButton
           viewedUser={viewedUser}
+          setViewedUser={setViewedUser}
           session={session}
           isFollowing={isFollowing}
           setIsFollowing={setIsFollowing}
           followerCount={followerCount}
-          setFollowerCount={setFollowerCount} />}
+          setFollowerCount={setFollowerCount} 
+          />}
         <h2>{viewedUser ? viewedUser.username : "No user found."}</h2>
       </div>
-      {viewedUser && 
-      <div><h4 className='followingCount' onClick={()=>setShowFollowingList(true)}>{viewedUser.following.length} Following</h4> 
-      <h4 className='followerCount' onClick={()=>setShowFollowersList(true)}>{followerCount} Followers</h4></div>}
-      {session && <Submit />}
+      {viewedUser &&
+        <div><h4 className='followingCount' onClick={() => setShowFollowingList(true)}>{viewedUser.following.length} Following</h4>
+          <h4 className='followerCount' onClick={() => setShowFollowersList(true)}>{followerCount} Followers</h4></div>}
       {quacks.map((quack: any) => {
         return <Quack
           id={quack._id}
