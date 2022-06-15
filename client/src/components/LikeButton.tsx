@@ -1,29 +1,29 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { solid, regular, brands } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
 import UserList from './UserList'
 
-export default function LikeButton(props : any) {
+export default function LikeButton(props: any) {
 
     const [isLiked, setIsLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(0)
     const [showUsersWhoLiked, setShowUsersWhoLiked] = useState(false)
     const [waitingApiResponse, setWaitingApiResponse] = useState(false);
 
-    useEffect(()=>{
-        if(props.session){
-            if(props.session.likes.includes(props.id)){
+    useEffect(() => {
+        if (props.session) {
+            if (props.session.likes.includes(props.id)) {
                 setIsLiked(true)
             }
         }
-        if(props.likedBy){
+        if (props.likedBy) {
             setLikeCount(props.likedBy.length)
         }
     }, [])
 
-    const handleClick = (event : any) => {
-        event.stopPropagation() 
+    const handleClick = (event: any) => {
+        event.stopPropagation()
         if (!waitingApiResponse) {
             if (isLiked) {
                 console.log("Unliking")
@@ -52,18 +52,22 @@ export default function LikeButton(props : any) {
         }
     }
 
-    const handleClickLikeCount = (event : any) =>{
-        event.stopPropagation() 
+    const handleClickLikeCount = (event: any) => {
+        event.stopPropagation()
         setShowUsersWhoLiked(true)
     }
 
-  return (
-    <div className='quackButtons'>
-        <UserList show={showUsersWhoLiked} setShow={setShowUsersWhoLiked} title="Users Who Liked"/>
-        {isLiked ?  
-        <FontAwesomeIcon style={{color:"red"}} icon={solid("heart")} onClick={handleClick}/> 
-        : <FontAwesomeIcon style={{color:"grey"}}icon={regular("heart")} onClick={handleClick}/>}
-        <a onClick={handleClickLikeCount} style={isLiked ? {color:"red"} : {color:"grey"}}> {likeCount > 0 && likeCount}</a>
-    </div>
-  )
+    return (
+        <div className='quackButtons'>
+            {/* div here makes it so it doesn't redirect to parent navigate() when you click off modal */}
+            <div onClick={(event) => { event.stopPropagation() }}> 
+                <UserList show={showUsersWhoLiked} setShow={setShowUsersWhoLiked} title="Users Who Liked" list={props.likedBy}/>
+            </div>
+
+            {isLiked ?
+                <FontAwesomeIcon style={{ color: "red" }} icon={solid("heart")} onClick={handleClick} />
+                : <FontAwesomeIcon style={{ color: "grey" }} icon={regular("heart")} onClick={handleClick} />}
+            <p onClick={handleClickLikeCount} style={isLiked ? { color: "red" } : { color: "grey" }}> {likeCount > 0 && likeCount}</p>
+        </div>
+    )
 }

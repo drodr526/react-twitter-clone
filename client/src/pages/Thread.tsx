@@ -48,13 +48,9 @@ export default function Thread() {
                     date={mainQuack.date}
                     session={session}
                 /> : <h2>{warning}</h2>}
-
-            {mainQuack && mainQuack.replies.length > 0 &&
                 <div>
                     <hr />
-                    <h3>Replies:</h3>
                 </div>
-            }
             {session && <Submit reply={true} postID={postID}/>}
 
             {mainQuack &&

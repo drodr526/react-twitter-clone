@@ -233,7 +233,7 @@ app.route("/api/feed")
 
 app.route("/api/posts/")
     .get((req, res) => {
-        Post.find({})
+        Post.find({"replyingTo":{$exists:false} })
             .sort({ date: -1 })
             .populate({
                 path: "author",

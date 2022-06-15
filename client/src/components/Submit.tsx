@@ -5,6 +5,7 @@ export default function Submit(props: any) {
 
     const [session, setSession] = useState(null);
     const [quackText, setQuackText] = useState("");
+    const [charCount, setCharCount] = useState(140)
 
 
     useEffect(() => {
@@ -13,10 +14,17 @@ export default function Submit(props: any) {
             .then((res) => setSession(res.data))
     })
 
+    useEffect(() => {
+        setCharCount(140 - quackText.length)
+    }, [quackText])
+
     const handleSubmit = () => {
+
+        let shortenedQuack = quackText.slice(0, 140)
+
         if (props.reply) {
             axios.post("/api/reply",
-                { postID: props.postID, content: quackText },
+                { postID: props.postID, content: shortenedQuack },
                 { withCredentials: true })
                 .then((res) => {
                     //@ts-ignore
@@ -24,7 +32,7 @@ export default function Submit(props: any) {
                 })
         } else {
             axios.post("/api/posts",
-                { content: quackText },
+                { content: shortenedQuack },
                 { withCredentials: true })
                 .then((res) => {
                     //@ts-ignore
@@ -40,6 +48,7 @@ export default function Submit(props: any) {
                 <label>{props.reply ? "Reply..." : "New quack"}</label>
             </div>
             <button className='btn btn-warning submitButton' onClick={handleSubmit} >Submit</button>
+            <p className="charCount" style={charCount >= 0 ? { color: "white" } : { color: "red" }}>{charCount}/140</p>
         </div>
     )
 }

@@ -16,60 +16,10 @@ body {
     text-decoration: none;
 }
 
-
-.login {
-    text-align: center;
-    padding: 150px 20px;
+.charCount {
+    margin: 20px;
+    float: right;
 }
-
-.quack {
-    border-top: 0.5px;
-    border-right: 1px;
-    border-left: 1px;
-    border-bottom: 0.5px;
-    border-color: grey;
-    border-style: solid;
-    padding: 25px;
-}
-
-.quack:hover{
-    background-color: #ffffff08;
-    cursor: pointer;
-}
-
-.quackButtons{
-    margin: 0 20% 0 0;
-    font-size: 1.3em;
-    cursor: pointer;
-}
-
-.quackButtons p{
-    display: inline;
-}
-
-.quackDate{
-    color: grey;
-    margin: 4px 10px;
-}
-
-.quackHeader {
-    display: flex;
-}
-
-.quackFooter{
-    display: flex;
-}
-
-.submitDiv {
-    border-top: 0.5px;
-    border-right: 1px;
-    border-left: 1px;
-    border-bottom: 0.5px;
-    border-color: grey;
-    border-style: solid;
-    padding: 25px;
-}
-
 
 /* FOLLOW = WHEN YOU DONT FOLLOW THEM YET */
 .followButton {
@@ -94,11 +44,12 @@ body {
     position: relative;
     top: 1px;
 }
+
 /* FOLLOWING = ALREADY FOLLOWING BUTTON */
 .followingButton {
     background-color: #ffed6400;
     border-radius: 28px;
-    border:1px solid #ffffff;
+    border: 1px solid #ffffff;
     cursor: pointer;
     color: #ffffff;
     font-family: Arial;
@@ -117,27 +68,28 @@ body {
     top: 1px;
 }
 
-.followingCount{
+.followingCount {
     cursor: pointer;
     display: inline-block;
     margin: 0 5%;
 }
 
-.followingCount:hover{
+.followingCount:hover {
     text-decoration: underline;
 }
 
-.followerCount{
+.followerCount {
     cursor: pointer;
     display: inline-block;
 }
 
-.followerCount:hover{
+.followerCount:hover {
     text-decoration: underline;
 }
 
-.user-header {
-    padding: 50px 20px;
+.login {
+    text-align: center;
+    padding: 150px 20px;
 }
 
 .name {
@@ -150,17 +102,71 @@ body {
     text-decoration: underline;
 }
 
-.userDiv{
+.quack {
+    border-top: 0.5px;
+    border-right: 1px;
+    border-left: 1px;
+    border-bottom: 0.5px;
+    border-color: grey;
+    border-style: solid;
+    padding: 25px;
+}
+
+.quack:hover {
+    background-color: #ffffff08;
+    cursor: pointer;
+}
+
+.quackButtons {
+    margin: 0 20% 0 0;
+    font-size: 1.3em;
+    cursor: pointer;
+}
+
+.quackButtons p {
+    display: inline;
+}
+
+.quackDate {
+    color: grey;
+    margin: 4px 10px;
+}
+
+.quackHeader {
+    display: flex;
+}
+
+.quackFooter {
+    display: flex;
+}
+
+.submitButton {
+    margin: 5px 0 5px 0;
+}
+
+.submitDiv {
+    border-top: 0.5px;
+    border-right: 1px;
+    border-left: 1px;
+    border-bottom: 0.5px;
+    border-color: grey;
+    border-style: solid;
+    padding: 25px;
+}
+
+.userDiv {
     cursor: pointer;
     padding: 20px;
 }
 
-.userDiv:hover{
+.userDiv:hover {
     cursor: pointer;
     background-color: #ffffff13;
 }
 
-
+.user-header {
+    padding: 50px 20px;
+}
 
 
 @media only screen and (max-width: 1350px) {
