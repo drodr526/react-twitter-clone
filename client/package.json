@@ -19,6 +19,7 @@
     "react": "^18.1.0",
     "react-bootstrap": "^2.4.0",
     "react-dom": "^18.1.0",
+    "react-image-crop": "^8.6.12",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "requirements": "^1.4.1",
@@ -49,5 +50,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4000"
+  "proxy": "http://localhost:4000",
+  "devDependencies": {
+    "@types/react-image-crop": "^8.1.3"
+  }
 }

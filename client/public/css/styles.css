@@ -1,14 +1,17 @@
 body {
     background-color: #14171A;
     color: #F5F8FA;
-    padding: 0 500px;
+    padding: 0 550px;
+}
+
+p{
+    font-size: 1.1rem;
 }
 
 .atUsername {
     color: grey;
     text-decoration: none;
     display: flex;
-    margin: 3px 10px
 }
 
 .atUsername:hover {
@@ -19,6 +22,11 @@ body {
 .charCount {
     margin: 20px;
     float: right;
+}
+
+.settingsButton{
+    display: block;
+    margin: 20px 0;
 }
 
 /* FOLLOW = WHEN YOU DONT FOLLOW THEM YET */
@@ -94,7 +102,9 @@ body {
 
 .name {
     color: white;
+    font-weight: bold;
     text-decoration: none;
+    margin: 0 10px 0 0;
 }
 
 .name:hover {
@@ -129,7 +139,7 @@ body {
 
 .quackDate {
     color: grey;
-    margin: 4px 10px;
+    margin: 0 0 0 20px;
 }
 
 .quackHeader {
@@ -138,6 +148,20 @@ body {
 
 .quackFooter {
     display: flex;
+}
+
+.quackProfilePicture{
+    margin: 0 25px 0 0;
+    width: 60px;
+    border-radius: 100%;
+}
+
+.quackLeftSide, .quackRightSide {
+    display: table-cell;
+}
+
+.quackRightSide{
+    width: 100%;
 }
 
 .submitButton {
@@ -168,6 +192,32 @@ body {
     padding: 50px 20px;
 }
 
+.settings{
+    line-height: 40px;
+}
+
+.submitProfilePicture{
+    display: block;
+    margin: 20px 0;
+}
+
+/* IMG CROP */
+
+/* .App {
+    padding: 16px;
+  }
+  
+  .Crop-Controls {
+    margin-bottom: 10px;
+  }
+  .Crop-Controls > * {
+    margin-bottom: 3px;
+  }
+  
+  img {
+    max-width: 100%;
+  } */
+  
 
 @media only screen and (max-width: 1350px) {
     body {

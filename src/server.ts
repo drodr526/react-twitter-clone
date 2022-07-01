@@ -13,6 +13,33 @@ import bodyParser from "body-parser";
 import { UserInterface } from "./Interfaces/UserInterface"
 import { DatabaseUserInterface } from "./Interfaces/UserInterface";
 import { PostInterface } from "./Interfaces/PostInterface";
+import multer from "multer"
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "./profile_pictures/")
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + file.originalname);
+    }
+})
+
+const fileFilter = (req: any, file: any, cb: any) => {
+    //reject a file
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+        cb(null, true)
+    } else {
+        cb(null, false)
+    }
+}
+
+const upload = multer({
+    storage: storage, 
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
 
 dotenv.config();
 
@@ -22,6 +49,7 @@ mongoose.connect(`${process.env.MONGODB_URI}`); //you need `${env_variable_name}
 
 // Middleware
 const app = express();
+app.use("/profile_pictures", express.static("profile_pictures"))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:3000", credentials: true }))
@@ -132,7 +160,7 @@ app.route("/api/users/:username/posts")
                     .sort({ date: -1 })
                     .populate({
                         path: "author",
-                        select: "name username"
+                        select: "profilePicturePath name username"
                     })
                     //@ts-ignore
                     .exec((err: Error, postDocs: any) => {
@@ -219,25 +247,24 @@ app.route("/api/reply")
 app.route("/api/feed")
     .get((req: any, res: any) => {
         req.user.following.push(req.user)
-        Post.find({ "author": { $in: req.user.following }, "replyingTo":{$exists:false} })
+        Post.find({ "author": { $in: req.user.following }, "replyingTo": { $exists: false } })
             .sort({ date: -1 })
             .populate({
                 path: "author",
-                select: "name username"
+                select: "profilePicturePath name username"
             })
-            //@ts-ignore
-            .exec((err: Error, posts: any) => {
+            .exec((err: any, posts: any) => {
                 res.send(posts)
             })
     })
 
 app.route("/api/posts/")
     .get((req, res) => {
-        Post.find({"replyingTo":{$exists:false} })
+        Post.find({ "replyingTo": { $exists: false } })
             .sort({ date: -1 })
             .populate({
                 path: "author",
-                select: "name username"
+                select: "profilePicturePath name username"
             })
             .exec((err: any, posts: any) => {
                 if (err) console.log(err)
@@ -263,14 +290,14 @@ app.route("/api/posts/:id")
         Post.findById(req.params.id)
             .populate({
                 path: "author",
-                select: "name username"
+                select: "profilePicturePath name username"
             })
             .populate({
                 path: "replies",
                 select: "content date likedBy",
-                populate:{
+                populate: {
                     path: "author",
-                    select:"name username date"
+                    select: "profilePicturePath name username date"
                 }
             })
             .exec((err: any, post: PostInterface) => {
@@ -282,6 +309,47 @@ app.route("/api/posts/:id")
         Post.findByIdAndDelete(req.params.id, (err: Error, doc: PostInterface) => {
             if (err) res.send(err);
             else res.send("Deleted successfully")
+        })
+    })
+
+app.route("/api/change-username")
+.post((req: any, res : any)=>{
+    User.findOne({username: req.body.username})
+    .exec((err : any, doc : any) =>{
+        if(doc){
+            res.send("Username already exists.")
+        }else{
+            User.findOneAndUpdate({username: req.user.username}, {username: req.body.username})
+            .exec((err:any, doc : any) =>{
+                res.send("Updated username successfully")
+            })
+        }
+    })
+})
+
+app.route('/api/change-name')
+.post((req : any, res : any)=>{
+    User.findOneAndUpdate({username: req.user.username}, {name: req.body.name})
+    .exec(()=>{
+        res.send("Updated name successfully")
+    })
+})
+
+app.route('/api/change-password')
+.post( async (req : any, res : any)=>{
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    User.findOneAndUpdate({username: req.user.username}, {password: hashedPassword})
+    .exec(()=>{
+        res.send("Updated password successfully")
+    })
+})
+
+app.route("/api/change-pfp")
+    .post(upload.single("profilePicture"), (req : any, res) => {
+        User.findOneAndUpdate({username: req.user.username}, {profilePicturePath: req.file?.path})
+        .exec(()=>{
+            res.send("Updated successfully")
         })
     })
 

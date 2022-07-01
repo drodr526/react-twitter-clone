@@ -32,6 +32,7 @@ return (
     {session && <Submit />}
     {quacks.map((quack: any) => {
       return <Quack 
+      profilePicturePath={quack.author.profilePicturePath}
       id={quack._id} 
       key={quack._id}
       authorName={quack.author.name} 

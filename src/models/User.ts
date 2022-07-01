@@ -17,7 +17,11 @@ const userSchema= new mongoose.Schema({
     },
     following: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
     followers: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
-    likes:  [{type: mongoose.Schema.Types.ObjectId, ref: "Post"}]
+    likes:  [{type: mongoose.Schema.Types.ObjectId, ref: "Post"}],
+    profilePicturePath: {
+        type: String,
+        default: "profile_pictures/egg.png"
+    }
 })
 
 export default mongoose.model("User", userSchema)

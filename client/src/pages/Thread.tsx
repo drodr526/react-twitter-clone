@@ -39,6 +39,7 @@ export default function Thread() {
             <Navbar session={session} />
             {mainQuack ?
                 <Quack
+                    profilePicturePath={mainQuack.author.profilePicturePath}
                     id={mainQuack._id}
                     key={mainQuack._id}
                     authorName={mainQuack.author.name}
@@ -48,14 +49,15 @@ export default function Thread() {
                     date={mainQuack.date}
                     session={session}
                 /> : <h2>{warning}</h2>}
-                <div>
-                    <hr />
-                </div>
-            {session && <Submit reply={true} postID={postID}/>}
+            <div>
+                <hr />
+            </div>
+            {session && <Submit reply={true} postID={postID} />}
 
             {mainQuack &&
                 mainQuack?.replies.map((reply) => {
                     return <Quack
+                        profilePicturePath={reply.author.profilePicturePath}
                         id={reply._id}
                         key={reply._id}
                         authorName={reply.author.name}
@@ -68,6 +70,5 @@ export default function Thread() {
                 })}
 
         </div>
-
     )
 }

@@ -37,7 +37,11 @@ export default function User() {
         console.log(res.data)
 
         axios.get("/api/users/" + username + "/posts")
-          .then((res) => setQuacks(res.data))
+          .then((res) => {
+            console.log(res.data)
+            setQuacks(res.data)
+          })
+          
       })
   }, [])
 
@@ -76,6 +80,7 @@ export default function User() {
           <h4 className='followerCount' onClick={() => setShowFollowersList(true)}>{followerCount} Followers</h4></div>}
       {quacks.map((quack: any) => {
         return <Quack
+          profilePicturePath={quack.author.profilePicturePath}
           id={quack._id}
           key={quack._id}
           authorName={quack.author.name}

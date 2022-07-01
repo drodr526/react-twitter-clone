@@ -1,6 +1,7 @@
 export default interface PostInterface{
     content: "",
     author: {
+        profilePicturePath:"",
         name: "",
         username: ""
     },
@@ -12,7 +13,8 @@ export default interface PostInterface{
         content:"",
         author:{
             name:"",
-            username:""
+            username:"",
+            profilePicturePath:""
         },
         date:""
         likedBy:[]

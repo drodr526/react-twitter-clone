@@ -4,5 +4,6 @@ export default interface UserInterface{
     username:"",
     following:[],
     followers:[],
-    likes:[]
+    likes:[],
+    profilePicturePath:""
   }

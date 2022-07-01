@@ -31,8 +31,18 @@ export default function Quack(props: any) {
     simpleDate = Math.floor(timeDifference / 1000) + 's'
 
   return (
-      <div className="quack" onClick={()=>{navigate("/posts/"+props.id)}}>
-        <div className='quackHeader'><h4><a className="name" href={"/user/" + props.authorUsername}>{props.authorName}</a></h4>
+    <div className="quack" onClick={() => { navigate("/posts/" + props.id) }}>
+      <div className='quackLeftSide'>
+        <img className="quackProfilePicture" src={"/"+props.profilePicturePath} alt="" />
+      </div>
+
+      <div className='quackRightSide'>
+        <div className='quackHeader'>
+          <p>
+            <a className="name" href={"/user/" + props.authorUsername}>
+              {props.authorName}</a>
+          </p>
+
           <p><a className="atUsername" href={"/user/" + props.authorUsername}>@{props.authorUsername}</a></p>
           <p className='quackDate'><FontAwesomeIcon icon={regular("clock")} /> {simpleDate}</p></div>
 
@@ -44,6 +54,8 @@ export default function Quack(props: any) {
           <LikeButton session={props.session} id={props.id} likedBy={props.likedBy} />
         </div>
       </div>
+
+    </div>
 
   )
 }

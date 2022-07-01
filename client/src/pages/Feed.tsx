@@ -36,6 +36,7 @@ export default function Home() {
       {session && <Submit />}
       {quacks && quacks.map((quack: any) => {
         return <Quack 
+        profilePicturePath={quack.author.profilePicturePath}
         id={quack._id} 
         key={quack._id}
         authorName={quack.author.name} 

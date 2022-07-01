@@ -35,6 +35,12 @@ export default function LikeButton(props: any) {
                         setIsLiked(false)
                         setLikeCount(likeCount - 1)
                         setWaitingApiResponse(false)
+
+                        for (let i = 0; i < props.likedBy.length; i++) {
+                            if (props.likedBy[i] == props.session._id) {
+                                props.likedBy.splice(i, 1);
+                            }
+                        }
                     })
             }
             if (!isLiked) {
@@ -47,6 +53,7 @@ export default function LikeButton(props: any) {
                         setIsLiked(true)
                         setLikeCount(likeCount + 1)
                         setWaitingApiResponse(false)
+                        props.likedBy.push(props.session._id)
                     })
             }
         }
