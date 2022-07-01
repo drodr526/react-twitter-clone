@@ -14,6 +14,7 @@ import { UserInterface } from "./Interfaces/UserInterface"
 import { DatabaseUserInterface } from "./Interfaces/UserInterface";
 import { PostInterface } from "./Interfaces/PostInterface";
 import multer from "multer"
+const path = require('path');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -34,7 +35,7 @@ const fileFilter = (req: any, file: any, cb: any) => {
 }
 
 const upload = multer({
-    storage: storage, 
+    storage: storage,
     limits: {
         fileSize: 1024 * 1024 * 5
     },
@@ -313,46 +314,61 @@ app.route("/api/posts/:id")
     })
 
 app.route("/api/change-username")
-.post((req: any, res : any)=>{
-    User.findOne({username: req.body.username})
-    .exec((err : any, doc : any) =>{
-        if(doc){
-            res.send("Username already exists.")
-        }else{
-            User.findOneAndUpdate({username: req.user.username}, {username: req.body.username})
-            .exec((err:any, doc : any) =>{
-                res.send("Updated username successfully")
+    .post((req: any, res: any) => {
+        User.findOne({ username: req.body.username })
+            .exec((err: any, doc: any) => {
+                if (doc) {
+                    res.send("Username already exists.")
+                } else {
+                    User.findOneAndUpdate({ username: req.user.username }, { username: req.body.username })
+                        .exec((err: any, doc: any) => {
+                            res.send("Updated username successfully")
+                        })
+                }
             })
+    })
+
+app.route('/api/change-name')
+    .post((req: any, res: any) => {
+        User.findOneAndUpdate({ username: req.user.username }, { name: req.body.name })
+            .exec(() => {
+                res.send("Updated name successfully")
+            })
+    })
+
+app.route('/api/change-password')
+    .post(async (req: any, res: any) => {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        User.findOneAndUpdate({ username: req.user.username }, { password: hashedPassword })
+            .exec(() => {
+                res.send("Updated password successfully")
+            })
+    })
+
+app.route("/api/change-pfp")
+    .post(upload.single("profilePicture"), (req: any, res) => {
+        User.findOneAndUpdate({ username: req.user.username }, { profilePicturePath: req.file?.path })
+            .exec(() => {
+                res.send("Updated successfully")
+            })
+    })
+
+app.listen(`${process.env.PORT}` || 4000, () => {
+    console.log("Server started on port 4000");
+})
+
+if (`${process.env.NODE_ENV}` == "production") {
+    app.use(express.static("client/build"));
+}
+
+//always put the catch all at the end 
+app.get('/*', function (req : any, res : any) {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'), function (err : any) {
+        if (err) {
+            res.status(500).send("Error: " + err)
         }
     })
 })
 
-app.route('/api/change-name')
-.post((req : any, res : any)=>{
-    User.findOneAndUpdate({username: req.user.username}, {name: req.body.name})
-    .exec(()=>{
-        res.send("Updated name successfully")
-    })
-})
 
-app.route('/api/change-password')
-.post( async (req : any, res : any)=>{
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    User.findOneAndUpdate({username: req.user.username}, {password: hashedPassword})
-    .exec(()=>{
-        res.send("Updated password successfully")
-    })
-})
-
-app.route("/api/change-pfp")
-    .post(upload.single("profilePicture"), (req : any, res) => {
-        User.findOneAndUpdate({username: req.user.username}, {profilePicturePath: req.file?.path})
-        .exec(()=>{
-            res.send("Updated successfully")
-        })
-    })
-
-app.listen(4000, () => {
-    console.log("Server started on port 4000");
-})
