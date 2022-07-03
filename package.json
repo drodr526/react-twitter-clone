@@ -11,8 +11,6 @@
     "heroku-postbuild":"npm run install-client && npm run build",
     "start": "node dist/server.ts",
     "start:dev": "nodemon --exec ts-node src/server.ts",
-    "watch-node": "nodemon dist/index.js",
-    "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
   "author": "",
